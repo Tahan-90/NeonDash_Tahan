@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a14" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 21 21H3z' fill='%234af0c0'/%3E%3C/svg%3E" />
+<title>Neon Dash</title>
+<link rel="stylesheet" href="./css/app.css" />
+<link rel="manifest" href="./manifest.webmanifest" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <div id="hud">
+    <div id="score">0</div>
+    <div id="best-line">Best 0</div>
+    <div id="level-line">Neon Grid</div>
+    <div id="campaign-run-meter" aria-live="polite">
+      <span id="campaign-run-label">DISTANCE TO MONSTER</span>
+      <div class="campaign-run-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="campaign-run-progress"></i></div>
+      <b id="campaign-run-icon" aria-hidden="true">👾</b>
+    </div>
+  </div>
+  <div id="manual-powerups" aria-label="Manual power-ups" aria-live="polite"></div>
+  <div id="war-hud" aria-live="polite">
+    <div class="war-life-panel"><span>HULL</span><div id="war-lives" aria-label="4 lives"></div></div>
+    <div class="war-mission-panel"><strong id="war-mission-label">SYSTEM 1 · MISSION 1</strong><span id="war-kills-label">RAIDERS 0 / 12</span><div id="war-boss-health-panel"><b id="war-boss-name"></b><div><i id="war-boss-health"></i></div><small id="war-boss-health-value"></small></div></div>
+    <div class="war-status-panel"><div class="war-power-panel" id="war-power-label">WEAPON · STANDARD</div><div class="war-gem-panel" aria-label="Gems collected this mission">✦ <b id="war-gems">0</b></div></div>
+  </div>
+  <button id="campaign-boost-btn" aria-label="Boost campaign speed">⚡ BOOST</button>
+  <button id="pause-btn" aria-label="Pause game">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+    </svg>
+  </button>
+  <button id="rocket-btn" aria-label="Launch rocket" title="Manual rocket">
+    <span aria-hidden="true">➤</span><b id="rocket-ammo">3</b>
+  </button>
+  <button id="ability-btn" aria-label="Activate Falcon phase" title="Falcon phase">
+    <span aria-hidden="true">◈</span><b id="ability-timer">READY</b>
+  </button>
+  <div id="boss-hud" aria-label="Boss health">
+    <span>GUARDIAN</span><div><i id="boss-health"></i></div>
+  </div>
+  <button id="mute-btn" aria-label="Mute sound">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+    </svg>
+  </button>
+
+  <div id="powerups">
+    <div class="pchip" id="chip-shield">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8fd3ff" stroke-width="2.4" stroke-linejoin="round"><path d="M12 2 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>
+      SHIELD <b id="shield-hits">1 HIT</b>
+    </div>
+    <div class="pchip" id="chip-magnet">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff8fd0" stroke-width="2.4" stroke-linecap="round"><path d="M6 4v8a6 6 0 0 0 12 0V4"/><path d="M6 4h4v4H6zM14 4h4v4h-4z" fill="#ff8fd0" stroke="none"/></svg>
+      MAGNET <b id="magnet-t">6s</b>
+    </div>
+    <div class="pchip" id="chip-slow">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c7a9ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3c0 8 10 10 10 18M17 3c0 8-10 10-10 18"/></svg>
+      SLOW <b id="slow-t">6s</b>
+    </div>
+    <div class="pchip" id="chip-laser">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff8f5c" stroke-width="2.4" stroke-linejoin="round"><path d="M13 2 5 14h6l-1 8 8-12h-6z"/></svg>
+      LASER <b>READY</b>
+    </div>
+  </div>
+  <div id="comboline">
+    <div class="pchip" id="chip-combo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffcc55" stroke-width="2.4" stroke-linejoin="round"><path d="M13 2 5 14h6l-1 8 8-12h-6z"/></svg>
+      COMBO <b id="combo-v">0 · x1</b>
+    </div>
+  </div>
+
+  <div id="level-banner">
+    <div class="banner-eyebrow" id="banner-eyebrow">Level 2</div>
+    <div class="banner-name" id="banner-name">Sunset Circuit</div>
+  </div>
+
+  <div id="intro-screen" class="overlay">
+    <span class="eyebrow">STARFRONT ARCHIVE · ORIGIN 01</span>
+    <h1 class="game-title">NEON DASH</h1>
+    <div class="hero-ship home-hero-ship intro-hero-ship">
+      <span class="home-scene-planet" aria-hidden="true"></span><span class="home-scene-orbit" aria-hidden="true"></span>
+      <span class="home-scene-gem home-scene-gem-one" aria-hidden="true">✦</span><span class="home-scene-gem home-scene-gem-two" aria-hidden="true">✧</span>
+      <span class="home-ship-kicker">THE STAR EATER IS RISING</span>
+      <img src="./assets/ships/dart.svg" alt="Dart fighter jet" />
+      <span>THE LAST STARFRONT PILOT</span><small>One pilot. One galaxy. One chance.</small>
+    </div>
+    <div class="intro-story-copy">
+      <h2>THE STARS ARE GOING DARK</h2>
+      <p>The Star Eater is draining the Star Gems that keep every world alive. Take to the skies, recover the stolen light, and fight to give the galaxy a future.</p>
+    </div>
+    <div class="intro-buttons"><button id="intro-home-btn" class="btn">ENTER THE HANGAR <span aria-hidden="true">↗</span></button></div>
+  </div>
+
+  <div id="start-screen" class="overlay hidden">
+    <div class="home-topline">
+      <span class="eyebrow">STARFRONT COMMAND</span>
+      <button id="gembank-line" aria-label="Gem balance"></button>
+    </div>
+    <div class="home-shortcuts">
+      <button id="market-btn" class="icon-action home-market-shortcut" aria-label="Open market">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1 12H5L4 9Z"/><path d="M8 9V6a4 4 0 0 1 8 0v3M9 13v1m6-1v1"/></svg>
+      </button>
+      <span class="home-shortcut-label">FLIGHT SYSTEMS ONLINE</span>
+      <div class="home-pilot-shortcuts">
+        <button id="home-rewards-btn" class="icon-action" aria-label="Open rewards">✦</button>
+        <button id="profile-btn" class="icon-action" aria-label="Open pilot profile">
+          <img id="profile-shortcut-portrait" src="./assets/pilots/rookie.svg" alt="Rookie Pilot portrait" />
+          <span class="profile-shortcut-signal" aria-hidden="true">✦</span>
+        </button>
+      </div>
+    </div>
+    <h1 class="game-title">NEON DASH</h1>
+    <div class="hero-ship home-hero-ship">
+      <span class="home-scene-planet" aria-hidden="true"></span><span class="home-scene-orbit" aria-hidden="true"></span>
+      <span class="home-scene-gem home-scene-gem-one" aria-hidden="true">✦</span><span class="home-scene-gem home-scene-gem-two" aria-hidden="true">✧</span>
+      <span class="home-ship-kicker">ACTIVE FIGHTER · READY FOR LAUNCH</span>
+      <img id="home-ship" src="./assets/ships/dart.svg" alt="Dart fighter jet preview" />
+      <span id="home-ship-name">DART · INTERCEPTOR</span><small id="home-ship-ability">Balanced handling</small>
+    </div>
+    <div class="home-mode-heading"><span>CHOOSE YOUR FRONT</span><i aria-hidden="true"></i></div>
+    <button id="collector-btn" class="collector-mode-entry">
+      <img class="home-mode-art" src="./assets/worlds/neon-grid.svg" alt="" />
+      <span class="collector-entry-icon" aria-hidden="true">◇</span><span><strong>GEM RUN</strong><small>Dodge, collect, and build your pilot legend</small></span><b>›</b>
+    </button>
+    <button id="war-map-btn" class="war-mode-entry">
+      <img class="home-mode-art" src="./assets/worlds/void-run.svg" alt="" />
+      <span class="war-entry-icon" aria-hidden="true">⚔</span><span><strong>STARFRONT WAR</strong><small>Push back the invasion across five systems</small></span><b>›</b>
+    </button>
+    <nav class="home-nav" aria-label="Game pages">
+      <button id="rewards-btn" class="hub-link"><span>✦</span>Rewards</button>
+      <button id="guide-btn" class="hub-link"><span>ⓘ</span>Flight guide</button>
+    </nav>
+  </div>
+
+  <div id="collector-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to home">‹</button><div><span class="eyebrow">RECOVER THE STAR GEMS</span><h2 class="pause-title">GEM RUN</h2></div><span class="page-heading-spacer"></span></div>
+    <section class="collector-gem-card" aria-labelledby="collector-gem-title">
+      <div class="collector-gem-visual" aria-hidden="true">
+        <svg viewBox="0 0 100 116"><path d="m27 6 46 0 23 30-46 74L4 36z" fill="url(#collector-gem-fill)" stroke="#ffe8a3" stroke-width="2"/><path d="M27 6 18 36l32 74 0-104zm46 0 9 30-32 74V6zM4 36h92M27 6l23 30L73 6" fill="none" stroke="#fff4c2" stroke-opacity=".72" stroke-width="2"/><defs><linearGradient id="collector-gem-fill" x1="20" y1="8" x2="77" y2="104" gradientUnits="userSpaceOnUse"><stop stop-color="#fff2a1"/><stop offset=".48" stop-color="#fbbf4e"/><stop offset="1" stop-color="#e8793a"/></linearGradient></defs></svg>
+        <span>✦</span>
+      </div>
+      <div class="collector-gem-copy">
+        <span class="eyebrow">MORE THAN SCORE</span>
+        <h2 id="collector-gem-title">STAR GEMS POWER YOUR FLEET</h2>
+        <p>Every crystal you recover becomes spendable currency. Bank your haul after each flight and use it to expand your hangar and upgrade your arsenal.</p>
+        <div class="collector-gem-balance"><span>YOUR GEM RESERVE</span><strong><b id="collector-gem-balance">0</b> <small>GEMS</small></strong></div>
+      </div>
+      <div class="collector-gem-destinations" aria-label="Use gems to buy fighters and upgrades">
+        <span><b aria-hidden="true">✈</b> NEW FIGHTERS</span>
+        <span><b aria-hidden="true">⌘</b> SHIP TECH</span>
+        <span><b aria-hidden="true">⚔</b> WAR ARSENAL</span>
+      </div>
+    </section>
+    <p class="page-intro">Choose your flight. Every crystal recovered weakens the Star Eater's grip on the galaxy.</p>
+    <section class="mode-section" aria-labelledby="collector-heading">
+      <div class="mode-section-heading"><span class="eyebrow">SELECT A FLIGHT STYLE</span><h2 id="collector-heading">YOUR SORTIE</h2></div>
+      <div class="mode-picker" role="group" aria-label="Choose collector mode">
+        <button class="mode-choice selected" data-mode="classic" aria-pressed="true">
+          <span class="mode-card-art mode-art-survival" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="m24 3 6 13 14 2-10 10 2 15-12-7-12 7 2-15L4 18l14-2z"/><path d="m24 13 3.5 7 7.5 1-5.5 5.5 1.5 7.5-7-4-7 4 1.5-7.5L13 21l7.5-1z"/></svg></span>
+          <span class="mode-card-copy"><strong>SURVIVAL</strong><small>Endless gem hunt</small></span><span class="mode-card-mark" aria-hidden="true">›</span>
+        </button>
+        <button class="mode-choice" data-mode="sprint" aria-pressed="false">
+          <span class="mode-card-art mode-art-sprint" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="25" r="17"/><path d="M24 15v11l8 5M18 3h12M24 3v5M37 10l4-4"/></svg><i></i></span>
+          <span class="mode-card-copy"><strong>TIME ATTACK</strong><small>Race the clock</small></span><span class="mode-card-mark" aria-hidden="true">›</span>
+        </button>
+        <button class="mode-choice" data-mode="zen" aria-pressed="false">
+          <span class="mode-card-art mode-art-zen" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="8"/><path d="M24 24 40 8"/></svg><i></i><b></b></span>
+          <span class="mode-card-copy"><strong>FREE FLIGHT</strong><small>Explore in peace</small></span><span class="mode-card-mark" aria-hidden="true">›</span>
+        </button>
+      </div>
+    </section>
+    <div class="collector-pilot-card">
+      <div class="collector-pilot-display hero-ship">
+        <img id="collector-active-fighter" src="./assets/ships/dart.svg" alt="Dart fighter jet preview" />
+        <span id="collector-active-fighter-name">DART · INTERCEPTOR</span>
+        <small id="collector-active-fighter-ability">Balanced handling</small>
+      </div>
+      <button id="collector-hangar-btn" class="collector-hangar-link" aria-label="Open My Hangar">
+        <span class="hangar-button-emblem" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9H3z"/><path d="M8 20v-6h8v6M7 11h.01M17 11h.01"/></svg></span>
+        <span class="hangar-button-copy"><strong>MY HANGAR</strong><small>FIGHTERS · PILOTS</small></span><b aria-hidden="true">›</b>
+      </button>
+    </div>
+    <div id="mode-description">Endless arcade run. How long can you last?</div>
+    <button id="play-btn" class="btn home-play">START FLIGHT</button>
+    <section class="collector-combo-rewards" aria-labelledby="collector-combo-title">
+      <div class="collector-combo-heading"><div><span class="eyebrow">CHAIN GEMS · EARN FIGHTERS</span><h2 id="collector-combo-title">COMBO REWARDS</h2></div><span id="collector-best-combo">BEST x0</span></div>
+      <p class="collector-combo-intro">Keep collecting without a miss. Your best gem combo unlocks these fighters for free.</p>
+      <div id="collector-combo-cards" class="collector-combo-cards"></div>
+    </section>
+    <button id="campaign-btn" class="campaign-mode-entry"><span aria-hidden="true">✧</span><span><strong>STORY CAMPAIGNS</strong><small>Five runs, five guardians, one supreme monster</small></span><b>›</b></button>
+  </div>
+
+  <div id="campaign-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-collector aria-label="Back to Gem Run">‹</button><div><span class="eyebrow">GEM RUN · STORY FLIGHT</span><h2 class="pause-title">STARFRONT CAMPAIGNS</h2></div><span class="page-heading-spacer"></span></div>
+    <section class="campaign-tier-hero" aria-labelledby="campaign-tier-title">
+      <img id="campaign-tier-art" src="./assets/worlds/neon-grid.svg" alt="" />
+      <span class="campaign-tier-kicker"><span aria-hidden="true">✦</span> PILOT THE FRONTIER</span>
+      <div class="campaign-tier-copy"><span id="campaign-tier-label">TIER 1 · THE FIRST FRONTIER</span><h2 id="campaign-tier-title">THE GALAXY AWAITS</h2><p id="campaign-intro">Recover Star Gems, weaken the guardians, and clear five runs in each world.</p></div>
+      <div class="campaign-tier-meter"><div><span>CAMPAIGN CLEARANCE</span><b id="campaign-progress-label">0 / 25 RUNS</b></div><span class="campaign-tier-track"><i id="campaign-progress-fill"></i></span></div>
+    </section>
+    <button id="campaign-open-tier-btn" class="btn campaign-open-tier-btn hidden">OPEN NEXT TIER · FREE</button>
+    <div class="campaign-route-heading"><div><span class="eyebrow">FIVE WORLDS · FIVE GUARDIANS EACH</span><h2>CHOOSE YOUR FRONTIER</h2></div><span class="campaign-route-mark" aria-hidden="true">⌖</span></div>
+    <div class="campaign-map-legend"><span>✓ CLEARED</span><span>✦ AVAILABLE</span><span>◇ LOCKED</span></div>
+    <div id="campaign-list" class="campaign-list"></div>
+    <div class="campaign-map-footer"><span>FRONTIER STATUS</span><strong id="campaign-map-status">RUN 1 / 25</strong></div>
+  </div>
+
+  <div id="war-map-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to hangar">‹</button><div><span class="eyebrow">STARFRONT COMMAND</span><h2 class="pause-title">WARFRONT MAP</h2></div><span class="page-heading-spacer"></span></div>
+    <section class="war-map-hero" aria-labelledby="war-map-title">
+      <img src="./assets/worlds/void-run.svg" alt="" />
+      <span class="war-map-hero-kicker"><span aria-hidden="true">⚔</span> GALACTIC DEFENSE GRID</span>
+      <div class="war-map-hero-copy"><h2 id="war-map-title">THE FRONTIER IS UNDER SIEGE</h2><p id="war-map-intro">Push through six missions in each system. Every mission escalates across multiple waves, then the final mission unleashes its system's supreme monster.</p></div>
+      <div class="war-map-hero-progress"><span class="war-tier-badge"><span aria-hidden="true">✦</span><span>ACTIVE WARFRONT</span><strong id="war-tier-label">TIER 1</strong></span><span class="war-map-hero-count"><b id="war-progress">MISSION 1 / 30</b><i class="war-map-progress-track"><i id="war-map-progress-fill"></i></i></span></div>
+    </section>
+    <button id="war-open-tier-btn" class="btn war-open-tier-btn hidden">OPEN NEXT TIER</button>
+    <div class="war-map-legend"><span>◆ Cleared</span><span>● Available</span><span>◇ Locked</span></div>
+    <div id="war-scenarios" class="war-scenarios"></div>
+    <div class="war-map-footer"><span>WARFRONT CLEARANCE</span><strong id="war-progress-footer">MISSION 1 / 30</strong></div>
+  </div>
+
+  <div id="war-result-screen" class="overlay hidden">
+    <div class="war-celebration-mark" aria-hidden="true">✦</div>
+    <span class="eyebrow" id="war-result-eyebrow">MISSION CLEAR</span>
+    <h2 id="war-result-title" class="pause-title">FRONTIER SECURED</h2>
+    <p id="war-result-copy" class="page-intro"></p>
+    <div class="war-result-reward">✦ <strong id="war-result-gems">0</strong> STAR GEMS BANKED</div>
+    <p class="war-result-breakdown">✦ <b id="war-result-collected">0</b> collected + mission bonus · Hangar balance <b id="war-result-bank">0</b></p>
+    <div class="war-result-stats" aria-label="Mission statistics">
+      <div><span>SCORE</span><b id="war-result-score">0</b></div>
+      <div><span>ALIENS DEFEATED</span><b id="war-result-kills">0</b></div>
+      <div><span>WAVES CLEARED</span><b id="war-result-waves">0</b></div>
+      <div><span>SORTIE TIME</span><b id="war-result-time">0:00</b></div>
+      <div><span>HULL LEFT</span><b id="war-result-lives">0</b></div>
+    </div>
+    <section id="war-tier-stats" class="war-tier-stats hidden" aria-label="Tier statistics">
+      <strong>WAR TIER RECORD</strong>
+      <div><span>MISSIONS</span><b id="war-result-tier-missions">0 / 30</b><span>SCORE</span><b id="war-result-tier-score">0</b></div>
+      <div><span>ALIENS</span><b id="war-result-tier-kills">0</b><span>GEMS COLLECTED</span><b id="war-result-tier-gems">0</b></div>
+      <div><span>COMBAT TIME</span><b id="war-result-tier-time">0:00</b><span></span><b></b></div>
+    </section>
+    <button id="war-bank-reward-btn" class="btn war-bank-reward-btn">BANK REWARD</button>
+    <div class="btn-row"><button id="war-continue-btn" class="btn">NEXT MISSION</button><button id="war-map-return-btn" class="btn btn-ghost">WARFRONT MAP</button></div>
+  </div>
+
+  <div id="profile-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to hangar">‹</button><div><span class="eyebrow">PILOT RECORD</span><h2 class="pause-title">MY HANGAR</h2></div><span class="page-heading-spacer"></span></div>
+    <div class="page-scroll">
+      <section id="profile-identity" class="profile-card pilot-identity">
+        <img id="profile-avatar" src="./assets/pilots/rookie.svg" alt="Rookie pilot portrait" />
+        <div class="pilot-identity-copy">
+          <form id="pilot-name-form" class="pilot-name-form"><label class="sr-only" for="profile-pilot-name">Pilot name</label><input id="profile-pilot-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Choose your callsign" /><button type="submit" aria-label="Save pilot name">✓</button></form>
+          <span id="profile-rank">CADET</span>
+          <div class="pilot-record-stats"><span>COMBAT RATING<b id="profile-rating">100</b></span><span>TOTAL SCORE<b id="profile-total-score">0</b></span></div>
+        </div>
+        <div class="pilot-path-stats"><span>CAMPAIGN <b id="profile-campaign-progress">TIER 1 · 0/25</b></span><span>STARFRONT WAR <b id="profile-war-progress">TIER 1 · 0/30</b></span></div>
+        <div class="pilot-combo-stat"><span aria-hidden="true">⚡</span> BEST COMBO <b id="profile-best-combo">0</b></div>
+      </section>
+      <section class="profile-card pilot-portraits-card"><h3><span aria-hidden="true">✦</span> PILOT PORTRAITS</h3><div id="profile-pilots"></div></section>
+      <section class="profile-card hangar-fleet-card">
+        <h3><span aria-hidden="true">✈</span> YOUR FIGHTER FLEET</h3>
+        <div class="hangar-ship-stage"><img id="profile-ship-preview" src="./assets/ships/dart.svg" alt="Dart fighter" /><span class="hangar-ship-spark" aria-hidden="true">✦</span><strong id="profile-ship-name">DART · INTERCEPTOR</strong><small id="profile-ship-ability">Balanced handling</small></div>
+        <span class="fleet-scroll-hint">CHOOSE A CRAFT BELOW <b aria-hidden="true">↓</b></span>
+        <div id="vehicle-row" role="group" aria-label="Choose a fighter from your fleet"></div>
+      </section>
+      <section class="profile-card"><h3>FLIGHT HISTORY</h3><div id="profile-history"></div><div id="bestcombo-line">Best combo: 0</div></section>
+      <section class="profile-card"><h3>OWNED TECHNOLOGY</h3><div id="profile-technology"></div></section>
+      <section class="profile-card"><h3>SKINS</h3><div id="profile-skins"></div></section>
+      <section class="profile-card powerup-control-card">
+        <div class="powerup-control-heading"><div><span class="eyebrow">FLIGHT CONFIGURATION</span><h3>POWER-UP CONTROL</h3></div><span aria-hidden="true">⌘</span></div>
+        <p>Choose what activates on pickup and what waits for your command. Store up to two of each manual power-up type during Gem Run flights.</p>
+        <div id="profile-powerup-controls"></div>
+      </section>
+      <section class="profile-card"><h3>POWER-UP UPGRADES</h3><div id="profile-powerups"></div></section>
+      <section class="profile-card"><h3>WARFRONT ARSENAL</h3><div id="profile-war"></div></section>
+    </div>
+  </div>
+
+  <div id="market-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to hangar">‹</button><div><span class="eyebrow">PILOT SUPPLY</span><h2 class="pause-title market-title">MARKET</h2></div><div id="market-bank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffcc55" stroke-width="2.2" stroke-linejoin="round"><path d="M12 2l8 7-8 13L4 9z"/></svg><b id="market-bank-n">0</b></div></div>
+    <section class="market-hero"><div class="market-hero-art"><img id="market-hero-ship" src="./assets/ships/dart.svg" alt="" /><span aria-hidden="true">✦</span></div><div><span class="eyebrow">HANGAR OUTFITTERS</span><strong>Find your next edge</strong><small>Fresh gear for every kind of pilot.</small></div></section>
+    <div id="market-tabs" role="tablist" aria-label="Market category"></div>
+    <div id="market-list"></div>
+  </div>
+
+  <div id="rewards-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to hangar">‹</button><div><span class="eyebrow">FLIGHT RECORDS</span><h2 class="pause-title">REWARDS</h2></div><span class="page-heading-spacer"></span></div>
+    <div class="page-scroll">
+      <section class="rewards-hero"><img src="./assets/ships/dart.svg" alt="" /><div><span class="eyebrow">YOUR NEXT MILESTONE</span><strong>Every flight counts</strong><small>Earn stars across every game mode.</small></div><span class="rewards-hero-spark" aria-hidden="true">✦</span></section>
+      <div class="rewards-card rewards-daily"><h3><span aria-hidden="true">🎁</span> DAILY GEM STREAK</h3><div id="daily-reward"></div></div>
+      <div class="rewards-card rewards-challenge"><h3><span aria-hidden="true">⚡</span> DAILY CHALLENGE</h3><div id="daily-challenge"></div></div>
+      <div class="rewards-card rewards-achievements"><h3><span aria-hidden="true">🏆</span> ACHIEVEMENTS</h3><div id="achievement-list"></div></div>
+      <div class="rewards-card rewards-records"><h3><span aria-hidden="true">📈</span> PERSONAL BESTS</h3><div id="mode-records"></div></div>
+    </div>
+  </div>
+
+  <div id="guide-screen" class="overlay hidden">
+    <div class="page-heading"><button class="back-button" data-home aria-label="Back to hangar">‹</button><div><span class="eyebrow">FLIGHT SCHOOL</span><h2 class="pause-title">FIELD GUIDE</h2></div><span class="page-heading-spacer"></span></div>
+    <section class="guide-hero"><img src="./assets/ships/dart.svg" alt="" /><div><span class="eyebrow">STARFRONT ACADEMY</span><strong id="guide-hero-title">Flight basics</strong><small id="guide-hero-copy">Learn the controls and systems that make every flight count.</small></div><span aria-hidden="true">✦</span></section>
+    <nav id="guide-tabs" class="guide-tabs" aria-label="Flight guide topics">
+      <button type="button" class="guide-tab selected" data-guide-tab="flight" aria-pressed="true" data-icon="⌖">FLIGHT</button>
+      <button type="button" class="guide-tab" data-guide-tab="fighters" aria-pressed="false" data-icon="✈">FIGHTERS</button>
+      <button type="button" class="guide-tab" data-guide-tab="modes" aria-pressed="false" data-icon="◉">MODES</button>
+      <button type="button" class="guide-tab" data-guide-tab="hangar" aria-pressed="false" data-icon="✦">HANGAR</button>
+      <button type="button" class="guide-tab" data-guide-tab="warfront" aria-pressed="false" data-icon="⚔">WARFRONT</button>
+    </nav>
+    <div class="page-scroll guide-scroll">
+      <section class="guide-card" data-guide-topic="flight"><h3><span aria-hidden="true">⌖</span> FLIGHT CONTROLS</h3><p>Tap the left or right half of the screen to change lanes. On a keyboard, use ← / → or A / D. Tap the pause icon or press P to pause. Titans launch rockets with the lower-left button or F; Falcons activate phase with that button or G.</p></section>
+      <section class="guide-card" data-guide-topic="flight"><h3><span aria-hidden="true">✦</span> THE STARFRONT STORY</h3><p>Star Gems are the living fuel of the galaxy. The Star Eater's raider fleets have stolen them from five star systems to power a machine that will drain every sun. Recovering gems weakens the invaders and funds the ships and technology needed to push them back. Gem Runs gather the resources; Starfront War takes the fight to the enemy.</p></section>
+      <section class="guide-card" data-guide-topic="flight"><h3><span aria-hidden="true">🎯</span> MISSION OBJECTIVES</h3><p>Avoid incoming red hazards. Collect crystals to score, grow your combo, and bank gems after each run. Collected power-ups activate automatically. Complete daily challenges and achievements, then claim their rewards from the Rewards page.</p></section>
+      <section class="guide-card" data-guide-topic="flight"><h3><span aria-hidden="true">⚡</span> POWER-UP SYSTEMS</h3>
+        <div class="guide-power"><span class="power-symbol shield">⬡</span><span><strong>Shield</strong><small>Absorbs one collision (two with Shield 2.0).</small></span></div>
+        <div class="guide-power"><span class="power-symbol magnet">⌁</span><span><strong>Magnet</strong><small>Pulls nearby gems toward your fighter.</small></span></div>
+        <div class="guide-power"><span class="power-symbol slow">◷</span><span><strong>Slow time</strong><small>Slows hazards for a short time.</small></span></div>
+        <div class="guide-power"><span class="power-symbol laser">ϟ</span><span><strong>Laser</strong><small>Automatically fires at the next hazard ahead. Twin Laser targets two hazards.</small></span></div>
+        <div class="guide-power"><span class="power-symbol rocket">➤</span><span><strong>Titan rockets</strong><small>Manually destroy the nearest block ahead. Rockets are limited per flight; Guided Rack adds extra ammunition.</small></span></div>
+      </section>
+      <section class="guide-card" data-guide-topic="fighters" hidden><h3><span aria-hidden="true">🚀</span> FIGHTER ABILITIES</h3><div class="guide-fleet-showcase">
+        <span><img src="./assets/ships/dart.svg" alt="" /><b>DART</b></span><span><img src="./assets/ships/ghost.svg" alt="" /><b>GHOST</b></span><span><img src="./assets/ships/titan.svg" alt="" /><b>TITAN</b></span><span><img src="./assets/ships/falcon.svg" alt="" /><b>FALCON</b></span>
+        </div><p>Dart is balanced. Ghost unlocks at combo x10 (27 consecutive gems), has a smaller hitbox, and doubles gem rewards at 1,200 speed. Titan unlocks at combo x15 (42 consecutive gems), starts shielded, and fires manual rockets. Falcon can phase through hazards once per flight for five seconds; phase capacitors in the market extend it. Mirage auto-cloaks, Comet boosts gem score, Tempest auto-fires lasers, and each helicopter has a distinct support, armor, or evasion perk.</p></section>
+      <section class="guide-card" data-guide-topic="modes" hidden><h3><span aria-hidden="true">◉</span> GAME MODES</h3><p><strong>Gem Run</strong> contains Survival, a 60-second Time Attack, no-hazard Free Flight, and five sequential story campaigns. Every campaign has five escalating runs; gather Star Gems to damage each guardian, and reach the supreme monster in run five. Clearing all five worlds opens the next campaign tier. <strong>Starfront War</strong> is a touch-controlled space shooter across five star systems and 30 sequential missions per tier.</p></section>
+      <section class="guide-card" data-guide-topic="hangar" hidden><h3><span aria-hidden="true">✦</span> HANGAR & REWARDS</h3><p>Use My Hangar to review your fighters, skins, technologies, and power-up upgrades. Choose a free male or female pilot portrait in the Market, then change your callsign and equip portraits you own here. Your pilot rank grows with both your total flight score and combat rating. A glowing Rewards button means one or more rewards are ready to claim.</p></section>
+      <section class="guide-card" data-guide-topic="warfront" hidden><h3><span aria-hidden="true">⚔</span> STARFRONT WAR COMBAT</h3><p>Drag your ship anywhere on screen while its cannons fire automatically. Each sortie starts with four lives and has two life pickups dropped by enemies during its waves. Collect pickups by flying into them, including between waves. A mission has three to seven escalating waves; alien raiders weave in formations, gunships unleash aimed bursts, and kamikaze craft dive at your position. System finale bosses use different attack patterns and weapon types; watch the health bar and remaining HP above the battlefield. Every completed mission banks its gem reward and shows your sortie stats. Clear all 30 missions to unlock the next tier; open it yourself from the Warfront Map when you are ready.</p></section>
+      <section class="guide-card war-power-guide" data-guide-topic="warfront" hidden><h3><span aria-hidden="true">✧</span> STARFRONT WAR POWER-UPS</h3>
+        <div class="war-power-cards">
+          <div class="war-power-card"><span class="war-power-icon war-power-shield">⬡</span><span><strong>Shield</strong><small>Absorbs one enemy hit without losing a life.</small></span></div>
+          <div class="war-power-card"><span class="war-power-icon war-power-rapid">ϟ</span><span><strong>Rapid Fire</strong><small>Fires your cannons faster for 8 seconds.</small></span></div>
+          <div class="war-power-card"><span class="war-power-icon war-power-spread">✣</span><span><strong>Spread Shot</strong><small>Fires three lanes of shots at once.</small></span></div>
+          <div class="war-power-card"><span class="war-power-icon war-power-gem">✦</span><span><strong>Star Gems</strong><small>Adds 5 gems to your mission payout.</small></span></div>
+        </div>
+      </section>
+      <section class="guide-card" data-guide-topic="hangar" hidden><h3><span aria-hidden="true">🏅</span> PILOT RECORD</h3><p>My Hangar displays your pilot portrait, combat rank, and rating. Buy new pilot portraits in the market. Your rating rises with your equipped fighter, owned fleet, active technologies, and installed combat upgrades.</p></section>
+    </div>
+  </div>
+
+  <div id="gameover-screen" class="overlay hidden">
+    <div class="eyebrow" id="run-result-label" style="color: var(--color-danger)">Crashed</div>
+    <div class="score-final" id="final-score">0</div>
+    <div class="score-sub" id="final-best">Best 0</div>
+    <div class="score-sub" id="final-level">Neon Grid</div>
+    <div class="new-best" id="new-best">New Best</div>
+    <div id="run-stats">
+      <div><span>Gems</span><b id="stat-gems">0</b></div>
+      <div><span>Best combo</span><b id="stat-combo">0</b></div>
+      <div><span>Near misses</span><b id="stat-nm">0</b></div>
+      <div><span>Lasers fired</span><b id="stat-laser">0</b></div>
+      <div><span>Rockets fired</span><b id="stat-rocket">0</b></div>
+    </div>
+    <div id="unlock-notice" class="hidden">Vehicle unlocked</div>
+    <div id="gems-banked" class="hidden"></div>
+    <div id="goal-result" class="score-sub"></div>
+    <div class="btn-row">
+      <button id="restart-btn" class="btn">Play Again</button>
+      <button id="change-vehicle-btn" class="btn btn-ghost">Home</button>
+      <button id="collector-return-btn" class="btn btn-ghost hidden">Gem Run</button>
+    </div>
+  </div>
+
+  <div id="pause-screen" class="overlay hidden">
+    <div class="eyebrow">Game Paused</div>
+    <h2 class="pause-title">PAUSED</h2>
+    <div class="btn-row">
+      <button id="resume-btn" class="btn">Resume</button>
+      <button id="pause-restart-btn" class="btn btn-ghost">Restart</button>
+      <button id="pause-vehicle-btn" class="btn btn-ghost">Home</button>
+    </div>
+  </div>
+
+  <div id="debug">FPS:--</div>
+
+<script type="module" src="./js/game.js"></script>

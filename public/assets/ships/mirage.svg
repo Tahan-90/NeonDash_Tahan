@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Mirage stealth fighter</title>
+  <defs>
+    <linearGradient id="body" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e5f5ff"/><stop offset=".48" stop-color="#8bb7ef"/><stop offset="1" stop-color="#263e75"/></linearGradient>
+    <linearGradient id="glow" x2="0" y2="1"><stop stop-color="#9eeaff"/><stop offset="1" stop-color="#3476d4"/></linearGradient>
+  </defs>
+  <path d="M256 25 286 160 448 286 430 320 294 286 278 422 342 466 336 486 256 448 176 486 170 466 234 422 218 286 82 320 64 286 226 160Z" fill="url(#body)" stroke="#dff7ff" stroke-width="9" stroke-linejoin="round"/>
+  <path d="m256 44 18 162-18 31-18-31z" fill="url(#glow)" stroke="#effbff" stroke-width="5"/>
+  <path d="m242 248 14-20 14 20-14 145z" fill="#4279bd" opacity=".8"/>
+  <path d="m92 291 119-18-82 31zm328 0-119-18 82 31z" fill="#c9eaff" opacity=".7"/>
+  <path d="m230 434 26 14 26-14-10 31-16 9-16-9z" fill="#56d9ff"/>
+</svg>

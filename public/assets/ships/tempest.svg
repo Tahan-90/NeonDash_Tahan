@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Tempest strike fighter</title>
+  <defs>
+    <linearGradient id="body" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffe2e5"/><stop offset=".45" stop-color="#dd5c76"/><stop offset="1" stop-color="#5b244b"/></linearGradient>
+    <linearGradient id="canopy" x2="0" y2="1"><stop stop-color="#a4f5ff"/><stop offset="1" stop-color="#2473b9"/></linearGradient>
+  </defs>
+  <path d="M256 28 287 160 470 280 452 321 292 290 282 420 354 462 341 486 256 450 171 486 158 462 230 420 220 290 60 321 42 280 225 160Z" fill="url(#body)" stroke="#ffccd6" stroke-width="9" stroke-linejoin="round"/>
+  <path d="m256 48 23 146-23 39-23-39z" fill="url(#canopy)" stroke="#effdff" stroke-width="5"/>
+  <path d="m225 310 62 0-9 48h-44z" fill="#4c3453" stroke="#ff9cac" stroke-width="4"/>
+  <path d="m78 289 137-14-72 30zm356 0-137-14 72 30z" fill="#ffd5dd" opacity=".7"/>
+  <path d="m232 435 24 14 24-14-8 40-16 10-16-10z" fill="#ff895f"/>
+  <path d="m118 320 75-8-24 19h-51zm276 0-75-8 24 19h51z" fill="#ffd66f"/>
+</svg>

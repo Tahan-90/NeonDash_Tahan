@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Wasp scout helicopter, top view</title>
+  <defs>
+    <linearGradient id="hull" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f0f7b4"/><stop offset=".5" stop-color="#93b74d"/><stop offset="1" stop-color="#344b36"/></linearGradient>
+    <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#d5ffff"/><stop offset="1" stop-color="#4188a1"/></linearGradient>
+  </defs>
+  <path d="M256 74c40 42 56 92 57 151l66 57-14 31-62-35-8 100-39 62-39-62-8-100-62 35-14-31 66-57c1-59 17-109 57-151Z" fill="url(#hull)" stroke="#edf9bb" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M256 98c24 35 34 69 34 106h-68c0-37 10-71 34-106Z" fill="url(#glass)" stroke="#d9ffff" stroke-width="7"/>
+  <path d="M256 163v102m-36-50h72m-36-36v72" fill="none" stroke="#e5f5ae" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="256" cy="214" r="19" fill="#d3e88f" stroke="#f7ffd5" stroke-width="6"/>
+  <path d="m184 280-48 48m192-48 48 48M210 356l-25 51m117-51 25 51" fill="none" stroke="#d5e7a0" stroke-width="14" stroke-linecap="round"/>
+  <path d="M238 404h36m-18 0v42m-35 14h70" fill="none" stroke="#8dce73" stroke-width="8" stroke-linecap="round"/>
+</svg>

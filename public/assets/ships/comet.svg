@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Comet afterburner fighter</title>
+  <defs>
+    <linearGradient id="body" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff0c8"/><stop offset=".5" stop-color="#f29a46"/><stop offset="1" stop-color="#823c36"/></linearGradient>
+    <linearGradient id="flame" x2="0" y2="1"><stop stop-color="#fff6a1"/><stop offset="1" stop-color="#ff573f"/></linearGradient>
+  </defs>
+  <path d="M256 30 294 174 465 276 448 318 294 285 278 419 350 460 340 485 256 450 172 485 162 460 234 419 218 285 64 318 47 276 218 174Z" fill="url(#body)" stroke="#fff0d8" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M256 48 280 201 256 230 232 201Z" fill="#7bdcff" stroke="#fff6df" stroke-width="5"/>
+  <path d="m229 420 27 30 27-30-9 57-18 15-18-15z" fill="url(#flame)"/>
+  <path d="m91 290 121-14-83 30zm330 0-121-14 83 30z" fill="#ffe6a8" opacity=".7"/>
+  <path d="M203 320h106l-13 40h-80z" fill="#e56c41" stroke="#ffd49a" stroke-width="4"/>
+</svg>

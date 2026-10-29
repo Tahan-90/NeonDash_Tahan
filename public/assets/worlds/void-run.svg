@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" y2="1"><stop stop-color="#05060d"/><stop offset=".46" stop-color="#11101b"/><stop offset="1" stop-color="#040409"/></linearGradient>
+    <radialGradient id="hole"><stop stop-color="#05050a" offset=".54"/><stop stop-color="#242039" offset=".63"/><stop stop-color="#9d75ff" stop-opacity=".3" offset=".68"/><stop stop-color="#120e20" stop-opacity="0" offset="1"/></radialGradient>
+    <linearGradient id="haze" y2="1"><stop stop-color="#a989ff" stop-opacity=".1"/><stop offset="1" stop-color="#a989ff" stop-opacity="0"/></linearGradient>
+  </defs>
+  <rect width="900" height="1500" fill="url(#sky)"/>
+  <circle cx="680" cy="395" r="310" fill="url(#hole)"/>
+  <ellipse cx="680" cy="395" rx="234" ry="55" fill="none" stroke="#e2d8ff" stroke-opacity=".22" stroke-width="3" transform="rotate(-17 680 395)"/>
+  <g fill="#e9e4ff"><circle cx="89" cy="165" r="2"/><circle cx="282" cy="294" r="2"/><circle cx="471" cy="142" r="2"/><circle cx="176" cy="497" r="2"/><circle cx="435" cy="620" r="2"/><circle cx="820" cy="703" r="2"/><circle cx="120" cy="797" r="2"/><circle cx="706" cy="924" r="2"/><circle cx="316" cy="1022" r="2"/><circle cx="160" cy="1195" r="2"/><circle cx="789" cy="1335" r="2"/></g>
+  <path d="M0 1111q152-117 297-2t268-33q170-92 335 22v402H0z" fill="#0b0a14"/>
+  <path d="m0 1265 169-143 133 125 142-116 143 139 143-137 170 109v258H0z" fill="#13111e"/>
+  <rect y="600" width="900" height="520" fill="url(#haze)"/>
+  <g stroke="#b5a7ea" stroke-opacity=".11" fill="none"><path d="M0 1190h900M0 1300h900M0 1430h900"/><path d="M90 1170 0 1500m195-330-60 330m275-330v330m190-330 70 330m210-330 150 330"/></g>
+</svg>

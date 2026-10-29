@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Atlas armored helicopter, top view</title>
+  <defs>
+    <linearGradient id="hull" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d4f8ed"/><stop offset=".48" stop-color="#55b49c"/><stop offset="1" stop-color="#244d54"/></linearGradient>
+    <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#c9ffff"/><stop offset="1" stop-color="#397d9b"/></linearGradient>
+  </defs>
+  <path d="M256 58c51 45 72 105 72 177v102l-42 91h-60l-42-91V235c0-72 21-132 72-177Z" fill="url(#hull)" stroke="#c8fff0" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M256 91c34 42 44 82 44 132h-88c0-50 10-90 44-132Z" fill="url(#glass)" stroke="#d9ffff" stroke-width="8"/>
+  <path d="M256 151v145m-56-71h112m-56-54v108" fill="none" stroke="#d8fff3" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="256" cy="225" r="25" fill="#7edcc4" stroke="#effff8" stroke-width="7"/>
+  <path d="m187 242-95 40 10 43 88-18m135-65 95 40-10 43-88-18" fill="url(#hull)" stroke="#c8fff0" stroke-width="9" stroke-linejoin="round"/>
+  <path d="m104 277-32 18 45 20m291-38 32 18-45 20" fill="none" stroke="#effff8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M212 350v60m88-60v60m-116 0h144" fill="none" stroke="#d8fff3" stroke-width="14" stroke-linecap="round"/>
+  <path d="m226 323 30 17 30-17-8 37h-44z" fill="#effff9"/>
+</svg>

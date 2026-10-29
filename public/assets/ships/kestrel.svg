@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Kestrel evasive helicopter, top view</title>
+  <defs>
+    <linearGradient id="hull" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#ffe8ff"/><stop offset=".5" stop-color="#bd83c9"/><stop offset="1" stop-color="#563f7a"/></linearGradient>
+    <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#d5ffff"/><stop offset="1" stop-color="#528ac5"/></linearGradient>
+  </defs>
+  <path d="M256 67c43 44 62 102 62 168v95l-35 67h-54l-35-67v-95c0-66 19-124 62-168Z" fill="url(#hull)" stroke="#f8dcff" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M256 99c25 33 35 73 35 119h-70c0-46 10-86 35-119Z" fill="url(#glass)" stroke="#f1eaff" stroke-width="7"/>
+  <path d="M256 157v110m-42-54h84m-42-40v80" fill="none" stroke="#f5dcff" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="256" cy="213" r="19" fill="#d298e4" stroke="#fff0ff" stroke-width="6"/>
+  <path d="m189 240-55 61 18 30 59-46m112-45 55 61-18 30-59-46" fill="url(#hull)" stroke="#f5dcff" stroke-width="8" stroke-linejoin="round"/>
+  <path d="m152 307-23 14 36 24m195-38 23 14-36 24" fill="none" stroke="#fff0ff" stroke-width="7" stroke-linecap="round"/>
+  <path d="M225 330v62m62-62v62m-91 0h120m-60 0v32" fill="none" stroke="#edcaff" stroke-width="11" stroke-linecap="round"/>
+  <path d="m220 286 36 20 36-20-9 35h-54z" fill="#f6d3ff"/>
+</svg>
